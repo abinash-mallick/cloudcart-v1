@@ -1,0 +1,37 @@
+kind: DaemonSet
+apiVersion: apps/v1
+
+metadata:
+  name: daemonset-demo
+  namespace: cloudcart-ns
+
+spec:
+  selector:
+    matchLabels:
+      app: daemonset
+
+  template:
+    metadata:
+      labels:
+        app: daemonset
+    spec:
+
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+             nodeSelectorTerms:  
+              - matchExpressions:
+                  - key: node-type
+                    operator: In
+                    values:
+                      - application
+      
+      containers:
+        - name: daemonset-cont
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |
+              echo "daemonset running on $(hostname)"
+              sleep 3600

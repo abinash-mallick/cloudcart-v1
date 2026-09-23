@@ -1,0 +1,24 @@
+kind: Job
+apiVersion: batch/v1
+
+metadata: 
+  name: cloudcart-job
+  namespace: cloudcart-ns
+
+spec:
+  completions: 1
+  parallelism: 2
+  backoffLimit: 5
+
+  template:
+    spec:
+      containers:
+      - name: demo-cont 
+        image: busybox
+        command: 
+          - sh
+          - -c
+          - echo "Job completed"; exit 1
+
+      restartPolicy: Never
+        

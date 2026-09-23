@@ -1,0 +1,25 @@
+kind: VerticalPodAutoscaler
+apiVersion: autoscaling.k8s.io/v1
+
+metadata:
+  name: vpa-cloudcart
+  namespace: cloudcart-ns
+
+spec:
+  targetRef:
+    kind: Deployment
+    apiVersion: apps/v1
+    name: cloudcart-deployment
+
+  updatePolicy:
+    updateMode: "Recreate"
+
+  resourcePolicy:
+    containerPolicies:
+      - containerName: '*'    # Applies to all containers
+        minAllowed:
+          cpu: "100m"
+          memory: "128Mi"
+        maxAllowed:
+          cpu: "2"
+          memory: "4Gi"
