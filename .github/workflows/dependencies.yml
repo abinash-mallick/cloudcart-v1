@@ -1,0 +1,25 @@
+---
+
+name: Scans dependencies for known vulnerabilities
+
+on:
+  workflow_call:
+
+jobs:
+  scan-dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+     - name: Check out the repository
+       uses: actions/checkout@v4
+      
+     - name: Set-up Python 3.12
+       uses: actions/setup-python@v6
+       with:
+        python-version: "3.12"
+
+     - name: Install pip-audit tool
+       run: python -m pip install pip-audit
+
+     - name: Run the dependency check for vunerabilities
+       run: pip-audit -r requirements.txt
