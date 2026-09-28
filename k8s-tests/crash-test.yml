@@ -1,0 +1,18 @@
+kind: Pod
+apiVersion: v1
+metadata: 
+  name: crash-test-pod
+
+spec:
+  restartPolicy: Never
+  containers:
+    - name: crash-cont
+      image: busybox
+      command:
+        - sh
+        - -c
+        - |
+          echo "Application starting..."
+          exit 1
+
+

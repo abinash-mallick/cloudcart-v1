@@ -17,11 +17,29 @@ spec:
         labels:
           app: cloudcart
       spec:
+        securityContext:
+          runAsUser: 1000    #change user to nonroot to both main and init container
+          runAsNonRoot: true
+
+        initContainers:
+          - name: wait-for-db
+            image: busybox
+            command:
+              - sh
+              - -c
+              - |
+                echo "Waiting for DB to start....."
+                until nc -z db-service 5432;do
+                  echo "DB is not ready"
+                  sleep 20
+                done
+                echo " DB started...."
+
         containers:
         - name: cloudcart-container
           image: abinashmallick/cloudcart:c39d5b54a1a00fc7592173c8f891040633464503
           ports:
-          - containerPort: 5000
+            - containerPort: 5000
           env:
             - name: DB_HOST
               value: "db-service"

@@ -1,0 +1,19 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: readinessprobe-test
+
+spec:
+  restartPolicy: OnFailure
+  containers:
+    - name: test-cont
+      image: busybox
+      command: ["sh","-c","echo 'Application started....' && sleep 1800"]
+
+      readinessProbe:
+        exec:
+          command: ["cat","/tmp/ready"]
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        failureThreshold: 3
+          

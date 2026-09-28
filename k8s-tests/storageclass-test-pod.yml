@@ -1,0 +1,21 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: storageclass-test-pod
+  namespace: cloudcart-ns
+
+spec:
+  containers:
+    - name: busybox
+      image: busybox
+      command:
+        - sleep 
+        - "3600"
+      volumeMounts:
+        - name: test-storage
+          mountPath: /data
+
+  volumes:
+    - name: test-storage
+      persistentVolumeClaim:
+        claimName: pvc-demo

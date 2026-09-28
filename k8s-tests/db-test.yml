@@ -1,0 +1,18 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: db-test
+  namespace: cloudcart-ns
+spec:
+  containers:
+    - name: test-db
+      image: busybox
+      command:
+        - sh
+        - -c
+        - |
+          echo "running db test for connectivity"
+          nc -zv db-service 5432
+          echo "test complete"
+
+

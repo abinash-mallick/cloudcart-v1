@@ -1,0 +1,11 @@
+kind: Pod
+apiVersion: v1
+
+metadata: 
+  name: error-img
+
+spec:
+  containers:
+    - name: test-cont
+      image: busybox:invalid_tag
+        

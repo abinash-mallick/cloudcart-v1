@@ -1,0 +1,32 @@
+#############################################################################################################################
+##  Demo experiment for fsGroup                                                                                            ##
+##  So fsGroup is particularly important when your application needs to write to a mounted volume without running as root. ##
+#############################################################################################################################
+
+kind: Pod
+apiVersion: v1
+metadata:
+  name: fsgroup-test
+  namespace: cloudcart-ns
+
+spec:
+  securityContext:
+    fsGroup: 2000
+  containers:
+    - name: test
+      image: busybox
+      command:
+        - sh
+        - -c
+        - |
+          sleep 3600
+
+      volumeMounts:
+        - name: test-vol
+          mountPath: /data
+
+  volumes:
+    - name: test-vol
+      emptyDir: {}
+
+

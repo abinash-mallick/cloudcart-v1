@@ -1,0 +1,16 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: pending-test
+
+spec:
+  containers:
+    - name: test-cont
+      image: busybox
+      command:
+        - sleep
+        - "3600"
+      resources:
+        requests:
+          cpu: "100m"
+

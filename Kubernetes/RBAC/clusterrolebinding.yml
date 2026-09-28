@@ -1,0 +1,15 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+
+metadata:
+  name: cloudcart-pod-reader-cluster-binding
+
+subjects:
+  - kind: ServiceAccount
+    name: cloudcart-sa
+    namespace: cloudcart-ns
+
+roleRef:
+  kind: ClusterRole
+  name: cloudcart-pod-reader-cluster
+  apiGroup: rbac.authorization.k8s.io

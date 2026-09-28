@@ -1,0 +1,23 @@
+kind: Pod
+apiVersion: v1
+
+metadata:
+  name: taint-pod
+  namespace: cloudcart-ns
+
+spec:
+  #tolerations:
+ #  -  key: "node-role.kubernetes.io/control-plane"
+  #    operator: "Exists"
+   #   effect: "NoSchedule"
+  #nodeSelector:
+   # kubernetes.io/hostname: cloudcart-cluster-control-plane
+
+  containers:
+    - name: taint-cont
+      image: busybox
+      command:
+       - sh
+       - -c
+       - "echo Running on $(hostname); sleep 3600"
+

@@ -1,0 +1,45 @@
+kind: Pod
+apiVersion: v1
+
+metadata:
+  name: sidecar-pod
+  namespace: cloudcart-ns
+
+spec:
+
+  volumes:
+    - name: shared-logs
+      emptyDir: {}
+
+  containers:
+    - name: main-demo
+      image: busybox
+      command:
+        - sh
+        - -c
+        - |
+          while true;do
+            echo "Cloudcart application log: $(date) - $(whoami)" >> /var/log/app.log
+            echo "logs copied"
+            sleep 10
+          done
+      volumeMounts:
+        - name: shared-logs
+          mountPath: /var/log
+
+    - name: sidecar-cont
+      image: busybox
+      command:
+         - sh
+         - -c
+         - |
+           until [ -f /var/log/app.log ];do
+            sleep 2
+           done
+           tail -f /var/log/app.log
+
+      volumeMounts:
+        - name: shared-logs
+          mountPath: /var/log
+          
+          
