@@ -18,11 +18,18 @@ spec:
           app: cloudcart
       spec:
         securityContext:
-          runAsUser: 1000    #change user to nonroot to both main and init container
-          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
 
         initContainers:
           - name: wait-for-db
+            securityContext:
+              allowPrivilegeEscalation: false
+              runAsNonRoot: true
+              runAsUser: 999
+              capabilities:
+                drop:
+                  - ALL
             image: busybox
             command:
               - sh
@@ -38,6 +45,15 @@ spec:
         containers:
         - name: cloudcart-container
           image: abinashmallick/cloudcart:c39d5b54a1a00fc7592173c8f891040633464503
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 999
+            capabilities:
+              drop:
+                - ALL
+
           ports:
             - containerPort: 5000
           env:
@@ -88,10 +104,20 @@ spec:
         app: postgresql
 
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       containers:
-      - name: postgresql-db
-        
+      - name: postgresql-db        
         image: postgres:latest
+
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 999
+          capabilities:
+            drop:
+              - ALL  
         
         ports:
         - containerPort: 5432
