@@ -1,4 +1,4 @@
-name: DevSecOps end-to-end pipeline
+name: DevSecOps CI end-to-end pipeline
 
 on: 
   workflow_dispatch: 
