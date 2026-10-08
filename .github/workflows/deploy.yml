@@ -1,0 +1,27 @@
+name: Deploy to Production
+
+on:
+  workflow_run:
+    workflows: ["DevSecOps CI end-to-end pipeline"]
+    types:
+      - completed
+
+jobs:
+
+  deploy-to-k8s:
+    if: ${{ github.events.workflow_run.conclusion == 'success' }}    #condition to trigger only if CI succeeds
+    runs-on: self-hosted
+    steps:
+      - name: Deploy to Cloudcart Cluster
+        run: |
+          echo "Deploying........."
+          kubectl set image deployment/cloudcart-deployment cloudcart-container=${{ vars.DOCKERHUB_USERNAME }}/cloudcart:${{ github.event.workflow_run.head_sha }} -n cloudcart-ns
+  
+  verify-rollout:
+      runs-on: self-hosted
+      needs: deploy-to-k8s
+      steps:
+      - name: Verify Rollout
+        run: |
+          kubectl rollout status deployment/cloudcart-deployment -n cloudcart-ns
+
