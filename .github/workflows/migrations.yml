@@ -1,9 +1,8 @@
 name: Database Migration
 
 on:
-  workflow_run:
-    workflows: ["DevSecOps CI end-to-end pipeline"]
-    types: [completed]
+  workflow_call:
+
 
 jobs:
   migration-job:

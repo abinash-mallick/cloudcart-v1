@@ -7,6 +7,8 @@ on:
       - completed
 
 jobs:
+  migration-job:
+    uses: ./.github/workflows/migrations.yml
 
   deploy-to-k8s:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}    #condition to trigger only if CI succeeds
