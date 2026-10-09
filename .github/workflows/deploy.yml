@@ -2,14 +2,13 @@ name: Deploy to Production
 
 on:
   workflow_run:
-    workflows: ["DevSecOps CI end-to-end pipeline"]
+    workflows: ["Database Migration"]
     types:
       - completed
 
 jobs:
 
   deploy-to-k8s:
-    needs: [migration-job]
     if: ${{ github.event.workflow_run.conclusion == 'success' }}    #condition to trigger only if CI succeeds
     runs-on: self-hosted
     steps:
