@@ -9,6 +9,7 @@ on:
 jobs:
 
   deploy-to-k8s:
+    needs: [migration-job]
     if: ${{ github.event.workflow_run.conclusion == 'success' }}    #condition to trigger only if CI succeeds
     runs-on: self-hosted
     steps:

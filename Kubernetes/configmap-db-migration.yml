@@ -1,0 +1,20 @@
+kind: ConfigMap
+apiVersion: v1
+
+metadata:
+  name: db-migration-config
+  namespace: cloudcart-ns
+
+data:
+  001_add_hdmi_cable.sql: |
+    INSERT INTO products (name, description, price, stock)
+    SELECT
+        'HDMI Cable',
+        '5m long HDMI cable with 4K compatibility',
+        345.00,
+        45
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM products
+        WHERE name = 'HDMI Cable'
+    );

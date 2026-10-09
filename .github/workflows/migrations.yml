@@ -1,0 +1,25 @@
+name: Database Migration
+
+on:
+  workflow_run:
+    workflows: ["DevSecOps CI end-to-end pipeline"]
+      types: [completed]
+
+jobs:
+  migration-job:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Run database migration
+        run: |
+             kubectl delete job database-migration -n cloudcart-ns --ignore-not-found=true
+             kubectl apply -f Kubernetes/configmap-db-migration.yml
+             kubectl apply -f Kubernetes/db-migration-job.yml
+             kubectl wait --for=condition=complete job/database-migration -n cloudcart-ns --timeout=120s

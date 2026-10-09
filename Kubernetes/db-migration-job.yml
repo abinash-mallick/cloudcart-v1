@@ -1,0 +1,75 @@
+kind: Job
+apiVersion: batch/v1
+
+metadata:
+  name: database-migration
+  namespace: cloudcart-ns
+
+spec:
+  completions: 1
+  parallelism: 2
+  backoffLimit: 5
+
+  template:
+    spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      restartPolicy: Never
+      containers:
+       - name: job-container
+         image: postgres:16
+         securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 999
+          capabilities:
+            drop:
+              - ALL
+
+         env:
+            - name: PGHOST
+              value: db-service
+
+            - name: PGPORT
+              value: "5432"
+
+            - name: PGUSER
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: username
+
+            - name: PGDATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: database
+              
+
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: password
+
+         command: 
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              echo "Running database migration..."
+              psql -v ON_ERROR_STOP=1 -f /migrations/001_add_hdmi_cable.sql
+              echo "Migration completed successfully."
+
+         volumeMounts:
+            - name: migration
+              mountPath: /migrations
+
+      volumes:
+        - name: migration
+          configMap:
+            name: db-migration-config
+            
+
+
