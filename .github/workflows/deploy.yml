@@ -2,7 +2,7 @@ name: Deploy to Production
 
 on:
   workflow_run:
-    workflows: ["Database Migration"]
+    workflows: ["DevSecOps CI end-to-end pipeline"]
     types:
       - completed
 
