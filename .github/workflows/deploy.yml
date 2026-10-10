@@ -8,7 +8,7 @@ on:
 
 jobs:
   migration-job:
-    if: {{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     uses: ./.github/workflows/migrations.yml
 
   deploy-to-k8s:
